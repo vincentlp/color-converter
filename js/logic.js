@@ -1,6 +1,6 @@
 // main dispatching function
 function convertColor() {
-	var color_input = document.getElementById("color-input").value;
+	var color_input = document.getElementById("color-input").value.replace(/ /g, "");
 	if 		(isValidHex(color_input)) fromHex(color_input);
 	else if (isValidRgb(color_input)) fromRgb(color_input);
 	else if (isValidHsl(color_input)) fromHsl(color_input);
@@ -9,68 +9,30 @@ function convertColor() {
 
 // check for valid input
 function isValidHex(color) {
-	return color.match(/^#[a-f0-9]{6}$/i) !== null || color.match(/\b[a-f0-9]{6}\b/gi) !== null || 
-		color.match(/^#[a-f0-9]{3}$/i) !== null || color.match(/\b[a-f0-9]{3}\b/gi) !== null;
+	return color.match(/^#[a-f0-9]{6}$/i) !== null || color.match(/^\b[a-f0-9]{6}$\b/gi) !== null || 
+		color.match(/^#[a-f0-9]{3}$/i) !== null || color.match(/^\b[a-f0-9]{3}$\b/gi) !== null;
 }
 
 function isValidRgb(color) {
-	var match = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/;
-	return match.exec(color) !== null ;
+	var match1 = /rgb\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/;
+	var match2 = /^([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})$/;
+	return match1.exec(color) !== null || match2.exec(color) !== null;
 }
 
 function isValidHsl(color) {
-	return;
+	var match1 = /hsl\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/;
+	var match2 = /hsl\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)\)/;
+	var match3 = /^([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)$/;
+	return match1.exec(color) !== null || match2.exec(color) !== null || match3.exec(color) !== null;
 }
 
+// helpers
+function rgbToHex(v) {
+	v = parseInt(v, 10).toString(16);
+    return v.length === 1 ? '0' + v : v;
+}
 
-
-// Handling the conversion:
-// from HEX
-function fromHex(color) {
-
-	if (color.charAt(0) !== '#') color = '#' + color;
-
-	function hexToR(hex, mini) {
-		if (mini) {
-			var r = hex.substring(1,2);
-			return parseInt(r+r, 16);
-		} else return parseInt(hex.substring(1,3), 16);
-	}
-
-	function hexToG(hex, mini) {
-		if (mini) {
-			var g = hex.substring(2,3);
-			return parseInt(g+g, 16);
-		} else return parseInt(hex.substring(3,5), 16);
-	}
-
-	function hexToB(hex, mini) {
-		if (mini) {
-			var b = hex.substring(3,4);
-			return parseInt(b+b, 16);
-		} else return parseInt(hex.substring(5,7), 16);
-	}
-
-	function setRGBfromHEX(color, mini) {
-		var r = hexToR(color, mini);
-		var g = hexToG(color, mini);
-		var b = hexToB(color, mini);
-		return [r, g, b];
-	}
-
-	// setting HEX
-	document.getElementById("result-hex").value = color;
-
-
-	// setting RGB depending on minified HEX or not
-	var rgb;
-	if (color.match(/^#[a-f0-9]{3}$/i) !== null) rgb = setRGBfromHEX(color, true);
-	else rgb = setRGBfromHEX(color, false);
-
-	document.getElementById("result-rgb").value = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
-
-
-	// setting HSL
+function rgbToHsl(rgb) {
 	for (i = 0; i < rgb.length; i++) {
 		rgb[i] /= 255;
 	}
@@ -95,7 +57,58 @@ function fromHex(color) {
 	s_f = Math.round(s * 100) + '%';
 	l_f = Math.round(l * 100) + '%';
 
-	document.getElementById("result-hsl").value = "hsl(" + h_f + ", " + s_f + ", " + l_f + ")";
+	return [h_f, s_f, l_f];
+}
+
+// Handling the conversion:
+// from HEX
+function fromHex(color) {
+	console.log("fromHex")
+	if (color.charAt(0) !== '#') color = '#' + color;
+
+	function hexToR(hex, mini) {
+		if (mini) {
+			var r = hex.substring(1,2);
+			return parseInt(r+r, 16);
+		} else return parseInt(hex.substring(1,3), 16);
+	}
+
+	function hexToG(hex, mini) {
+		if (mini) {
+			var g = hex.substring(2,3);
+			return parseInt(g+g, 16);
+		} else return parseInt(hex.substring(3,5), 16);
+	}
+
+	function hexToB(hex, mini) {
+		if (mini) {
+			var b = hex.substring(3,4);
+			return parseInt(b+b, 16);
+		} else return parseInt(hex.substring(5,7), 16);
+	}
+
+	function hexToRgb(color, mini) {
+		var r = hexToR(color, mini);
+		var g = hexToG(color, mini);
+		var b = hexToB(color, mini);
+		return [r, g, b];
+	}
+
+	// setting HEX
+	document.getElementById("result-hex").value = color;
+
+
+	// setting RGB depending on minified HEX or not
+	var rgb;
+	if (color.match(/^#[a-f0-9]{3}$/i) !== null) rgb = hexToRgb(color, true);
+	else rgb = hexToRgb(color, false);
+
+	document.getElementById("result-rgb").value = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
+
+
+	// setting HSL
+	var hsl = rgbToHsl(rgb);
+	document.getElementById("result-hsl").value = "hsl(" + hsl[0] + ", " + hsl[1] + ", " + hsl[2] + ")";
 
 
 	colorSuccess(color);
@@ -103,26 +116,114 @@ function fromHex(color) {
 
 // from RGB
 function fromRgb(color) {
-	console.log("fromRgb");
-	document.getElementById("result-rgb").value = color;
-	colorSuccess(color);
 
-	function rgbToHex(R,G,B) {
-		return toHex(R)+toHex(G)+toHex(B);
-	}
-	function toHex(n) {
-	 n = parseInt(n,10);
-	 if (isNaN(n)) return "00";
-	 n = Math.max(0,Math.min(n,255));
-	 return "0123456789ABCDEF".charAt((n-n%16)/16)
-	      + "0123456789ABCDEF".charAt(n%16);
+	var rgb, r, g, b;
+	if (/rgb\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/.exec(color) !== null) {
+		rgb = color.substring(4, color.length-1).split(',');
+	} else if (/^([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})$/.exec(color) !== null) {
+		rgb = color.split(',');
 	}
 
+	r = rgb[0];
+	g = rgb[1];
+	b = rgb[2];
+
+	if ((r && g && b) > 255) colorError();
+	else {
+
+		// setting HEX
+		var hex = '#' + rgbToHex(r).toUpperCase() + rgbToHex(g).toUpperCase() + rgbToHex(b).toUpperCase();
+		document.getElementById("result-hex").value = hex;
+
+		// setting RGB
+		var new_rgb = "rgb(" + r + ", " + g + ", " + b + ")"
+		document.getElementById("result-rgb").value = new_rgb;
+
+		// setting HSL
+		var hsl = rgbToHsl(rgb);
+		document.getElementById("result-hsl").value = "hsl(" + hsl[0] + ", " + hsl[1] + ", " + hsl[2] + ")";
+
+		colorSuccess(new_rgb);
+	}
 }
 
 // from HSL
 function fromHsl(color) {
-	console.log("fromHsl");
+
+	var hsl, h, s, l;
+	if (/hsl\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/.exec(color) !== null) {
+		hsl = color.substring(4, color.length-1).split(',');
+	} else if (/hsl\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)\)/.exec(color) !== null) {
+		hsl = color.substring(4, color.length-1).split(',');
+		hsl[1] = hsl[1].substring(0, hsl[1].length-1);
+		hsl[2] = hsl[2].substring(0, hsl[2].length-1);
+	} else if (/^([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)$/.exec(color) !== null) {
+		hsl = color.split(',');
+		hsl[1] = hsl[1].substring(0, hsl[1].length-1);
+		hsl[2] = hsl[2].substring(0, hsl[2].length-1);
+	}
+
+	h = hsl[0];
+	s = hsl[1];
+	l = hsl[2];
+
+	if ((h > 359) || ((s && l) > 100)) colorError();
+	else {
+
+		// setting HSL
+		var new_hsl = "hsl(" + hsl[0] + ", " + hsl[1] + "%, " + hsl[2] + "%)"
+		document.getElementById("result-hsl").value = new_hsl;
+
+		// setting RGB
+		var r, g, b;
+		if (h == 0 && s == 0) r = g = b = Math.round(l / 100 * 255);
+		else {
+			h = h / 360;
+			s = s / 100;
+			l = l / 100;
+			
+			var t1, t2, tr, tg, tb;
+			if (l < 0.5) t1 = l * (1 + s);
+			else t1 = l + s - l * s;
+
+			t2 = 2 * l - t1;
+			
+			tr = h + 0.333;
+			tg = h;
+			tb = h - 0.333;
+
+			function checkTemp(v) {
+				if (v < 0) return v + 1;
+				else if (v > 1) return v - 1;
+				else return v;
+			}
+
+			tr = checkTemp(tr);
+			tg = checkTemp(tg);
+			tb = checkTemp(tb);
+
+			function tempToRgb(temp, t1, t2) {
+				if (6 * temp < 1) return t2 + (t1 - t2) * 6 * temp;
+				else if (2 * temp < 1) return t1;
+				else if (3 * temp < 2) return t2 + (t1 - t2) * (0.666 - temp) * 6;
+				else return t2;
+			}
+
+			r = Math.round(tempToRgb(tr, t1, t2) * 255);
+			g = Math.round(tempToRgb(tg, t1, t2) * 255);
+			b = Math.round(tempToRgb(tb, t1, t2) * 255);
+		}
+
+		var rgb = "rgb(" + r + ", " + g + ", " + b + ")"
+		document.getElementById("result-rgb").value = rgb;
+
+		// setting HEX
+		var hex = '#' + rgbToHex(r).toUpperCase() + rgbToHex(g).toUpperCase() + rgbToHex(b).toUpperCase();
+		document.getElementById("result-hex").value = hex;
+
+		colorSuccess(new_hsl)
+
+	}
 }
 
 
