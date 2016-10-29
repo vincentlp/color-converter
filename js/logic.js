@@ -1,3 +1,4 @@
+// main dispatching function
 function convertColor() {
 	var color_input = document.getElementById("color-input").value;
 
@@ -12,6 +13,9 @@ function convertColor() {
 	}
 }
 
+
+
+// functions handling the conversions
 function fromHex(color) {
 	console.log("fromHex");
 
@@ -57,19 +61,25 @@ function fromHsl(color) {
 	console.log("fromHsl");
 }
 
+
+
+// valid inputs check functions here
 function isValidHex(color) {
 	return color.match(/^#[a-f0-9]{6}$/i) !== null || color.match(/\b[a-f0-9]{6}\b/gi) !== null;
 }
 
 function isValidRgb(color) {
 	var match = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/;
-	return match.exec(color) !== null;
+	return match.exec(color) !== null ;
 }
 
 function isValidHsl(color) {
 	return;
 }
 
+
+
+// handling success or error functions
 function colorSuccess(color) {
 	document.body.style.backgroundColor = color;
 	document.getElementById("results-container").style.visibility = "visible";
@@ -81,6 +91,9 @@ function colorError() {
 	document.getElementById("color-error").style.display = "block";
 }
 
+
+
+// listener for entering Enter key
 document.getElementById("color-input").addEventListener("keyup", function(e) {
     e.preventDefault();
     if (e.keyCode == 13) {
@@ -88,6 +101,9 @@ document.getElementById("color-input").addEventListener("keyup", function(e) {
     }
 });
 
+
+
+// copy to clipboard feature
 var resultParent = document.querySelector("#results-container");
 resultParent.addEventListener("click", copyToClipboard, false);
  
@@ -129,4 +145,13 @@ function copyToClipboard(e) {
     	console.log("Oups");
     }
     e.stopPropagation();
+}
+
+
+
+// autofocus input onload
+window.onload = function(){
+  var color_input = document.getElementById("color-input");
+  color_input.focus();
+  color_input.select();
 }
