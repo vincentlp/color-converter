@@ -108,7 +108,9 @@ var resultParent = document.querySelector("#results-container");
 resultParent.addEventListener("click", copyToClipboard, false);
  
 function copyToClipboard(e) {
+
     if (e.target !== e.currentTarget && ((e.target.id == "result-hex-btn") || (e.target.id == "result-rgb-btn") || (e.target.id == "result-hsl-btn"))) {
+
         var clickedBtnId = e.target.id;
         if (clickedBtnId.indexOf("hex") != -1) {
         	console.log("hex");
@@ -141,10 +143,20 @@ function copyToClipboard(e) {
         } else {
         	console.log("nothing");
         }
+
+        toggleCopied();
+        setTimeout(function () {
+	      toggleCopied();
+	    }, 750);
+
     } else {
     	console.log("Oups");
     }
     e.stopPropagation();
+}
+
+function toggleCopied() {
+	document.getElementById("copied-to-clipboard").classList.toggle('copied-hidden');
 }
 
 
