@@ -5,7 +5,7 @@ html, body {
 
 body {
 	background-color: @background-color;
-	font-family: 'Lato';
+	font-family: @main-font;
 	display: flex;
 }
 
@@ -47,7 +47,7 @@ body {
     height: 40px;
     padding-left: 10px;
     font-size: 16px;
-    font-family: 'Lato';
+    font-family: @main-font;
     border-radius: 5px;
     margin-bottom: 25px;
 
@@ -67,7 +67,7 @@ body {
 
 .color-button {
 	color: #fff;
-	font-family: 'Lato';
+	font-family: @main-font;
 	margin-bottom: 25px;
 	width: 20%;
 	border: none;
@@ -146,7 +146,7 @@ body {
 
 .results-copy-button {
 	color: #fff;
-	font-family: 'Lato';
+	font-family: @main-font;
 	border: none;
 	border-radius: 3px;
 	background-color: @inputs-color;
@@ -200,8 +200,7 @@ body {
 .copied-hidden {
 	visibility: hidden;
 	opacity: 0;
-	transition: visibility 0s, opacity 0.5s linear;
-	transition: visibility 0s 2s, opacity 2s linear;
+	transition: visibility 0s 1.5s, opacity 1.5s linear;
 }
 
 .done-icon {

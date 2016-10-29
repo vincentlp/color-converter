@@ -115,7 +115,7 @@ function copyToClipboard(e) {
         if (clickedBtnId.indexOf("hex") != -1) {
         	console.log("hex");
 
-			var copyInput = document.querySelector('#result-hex');
+			var copyInput = document.getElementById('result-hex');
 			copyInput.select();
 
 			try {
@@ -128,7 +128,7 @@ function copyToClipboard(e) {
         } else if (clickedBtnId.indexOf("rgb") != -1) {
 			console.log("rgb");
 
-			var copyInput = document.querySelector('#result-rgb');
+			var copyInput = document.getElementById('result-rgb');
 			copyInput.select();
 
 			try {
