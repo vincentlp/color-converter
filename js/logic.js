@@ -26,7 +26,7 @@ function isValidHsl(color) {
 	return match1.exec(color) !== null || match2.exec(color) !== null || match3.exec(color) !== null;
 }
 
-// helpers
+
 function rgbToHex(v) {
 	v = parseInt(v, 10).toString(16);
     return v.length === 1 ? '0' + v : v;
@@ -60,10 +60,11 @@ function rgbToHsl(rgb) {
 	return [h_f, s_f, l_f];
 }
 
+
 // Handling the conversion:
 // from HEX
 function fromHex(color) {
-	console.log("fromHex")
+
 	if (color.charAt(0) !== '#') color = '#' + color;
 
 	function hexToR(hex, mini) {
@@ -221,7 +222,7 @@ function fromHsl(color) {
 		var hex = '#' + rgbToHex(r).toUpperCase() + rgbToHex(g).toUpperCase() + rgbToHex(b).toUpperCase();
 		document.getElementById("result-hex").value = hex;
 
-		colorSuccess(new_hsl)
+		colorSuccess(new_hsl);
 
 	}
 }
