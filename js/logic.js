@@ -52,7 +52,7 @@ function rgbToHsl(rgb) {
 		else if (max == rgb[2]) h = 4 + (rgb[0] - rgb[1]) / (max - min);
 	}
 
-	h = Math.round(h * 60)
+	h = Math.round(h * 60);
 	h_f = h < 0 ? h + 360 : h;
 	s_f = Math.round(s * 100) + '%';
 	l_f = Math.round(l * 100) + '%';
