@@ -7,10 +7,24 @@ body {
 	background-color: @background-color;
 	font-family: @main-font;
 	display: flex;
+	flex-direction: column;
 }
 
-.web-link {
-	color: #fff;
+.box-helper(@blur: 5px) {
+    webkit-box-shadow: 0 0 @blur 0 rgba(0, 0, 0, .5);
+      -moz-box-shadow: 0 0 @blur 0 rgba(0, 0, 0, .5);
+           box-shadow: 0 0 @blur 0 rgba(0, 0, 0, .5);
+}
+
+.box-helper-inset(@blur: 5px) {
+    webkit-box-shadow: inset 0 0 @blur 0 rgba(0, 0, 0, .5);
+      -moz-box-shadow: inset 0 0 @blur 0 rgba(0, 0, 0, .5);
+           box-shadow: inset 0 0 @blur 0 rgba(0, 0, 0, .5);
+}
+
+.title-link {
+	align-self: flex-start;
+	color: @font-color;
     text-align: center;
     font-size: 2.4rem;
     font-variant: small-caps;
@@ -22,19 +36,35 @@ body {
     };
 }
 
+.link {
+	text-decoration: none;
+	color: inherit;
+
+    &:hover {
+    	color: #CDCDCD;
+    };
+}
+
+.contact {
+	color: @font-color;
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
 .container {
 	display: flex;
 	justify-content: center;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	flex-direction: column;
-	padding: 10vh 0;
 	margin: auto;
 	width: 90%;
 	max-width: 400px;
+	min-height: 450px;
 }
 
 .title {
-	color: #fff;
+	color: @font-color;
 	text-align: center;
 	font-size: 2.4rem;
 	font-variant: small-caps;
@@ -43,7 +73,7 @@ body {
 
 .title-separator {
 	border: solid 1px;
-	color: #fff;
+	color: @font-color;
 	margin-bottom: 30px;
 }
 
@@ -54,8 +84,7 @@ body {
 
 .color-input {
 	background-color: @darker-background-color;
-	background-color: #1e1e1e;
-    color: #fff;
+    color: @font-color;
     border: none;
     height: 40px;
     padding-left: 10px;
@@ -93,9 +122,7 @@ body {
 	padding: 0;
 	padding-bottom: 3px;
 	transition: background-color .2s;
-    -webkit-box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, .5);
-    -moz-box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, .5);
-    box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, .5);
+	.box-helper-inset(2px);
 
 	&:hover {
 		background-color: #1f9820;
@@ -109,33 +136,66 @@ body {
 .color-error {
 	display: none;
 	text-align: center;
-	color: #fff;
+	color: @font-color;
     position: relative;
     top: -20px;
     font-size: small;
     font-weight: 500;
     background-color: #b50b0b;
-    border-radius: 5px;
     padding: 5px;
-	-webkit-box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
-	-moz-box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
-	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
+    .box-helper-inset(5px);
+}
+
+.show-more {
+	cursor: pointer;
+	position: relative;
+    top: -5px;
+
+    &:hover {
+    	color: #CDCDCD;
+    };
+}
+
+.down-icon {
+	background-image: url('../img/down.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 6px;
+}
+
+.error-list {
+	text-align: left;
+	opacity: 1;
+	font-size: medium;
+	transition: opacity 0.5s ease-out;
+}
+
+.error-hide {
+	opacity: 0;
+	font-size: 0;
 }
 
 .results-container {
-	visibility: hidden;
+	visibility: visible;
 	display: flex;
 	flex-wrap: wrap;
-	color: #fff;
+	color: @font-color;
     font-variant: small-caps;
     font-size: larger;
     font-weight: bold;
     background-color: @inputs-color;
     padding: 10px;
     border-radius: 5px;
-	-webkit-box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
-	-moz-box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
-	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
+    .box-helper-inset(5px);
+}
+
+.hide-results {
+	visibility: hidden;
+	height: 0;
 }
 
 .results-row {
@@ -158,7 +218,7 @@ body {
 }
 
 .results-copy-button {
-	color: #fff;
+	color: @font-color;
 	font-family: @main-font;
 	border: none;
 	border-radius: 3px;
@@ -182,7 +242,7 @@ body {
 }
 
 .copy-icon {
-	background-image: url('../img/copy_white.png');
+	background-image: url('../img/copy.png');
 	display: inline-block;
 	background-repeat: no-repeat;
     background-size: 18px 18px;
@@ -196,16 +256,14 @@ body {
 	display: flex;
 	align-self: center;
 	text-align: center;
-	color: #fff;	
+	color: @font-color;	
     font-weight: 500;
     background-color: rgba(51,51,51,0.8);
     border-radius: 20px;
     padding: 20px;
     line-height: 1.4em;
     margin-top: 15px;
-	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
-	-moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
-	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+    .box-helper(5px);
   	transition: visibility 0s, opacity 0.5s linear;
   	transition: opacity 0.5s linear;
 }

@@ -1,32 +1,34 @@
-// main dispatching function
-function convertColor() {
-	var color_input = document.getElementById("color-input").value.replace(/ /g, "");
-	if 		(isValidHex(color_input)) fromHex(color_input);
-	else if (isValidRgb(color_input)) fromRgb(color_input);
-	else if (isValidHsl(color_input)) fromHsl(color_input);
-	else 	colorError();
+function init() {
+	function randomInt(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	document.body.style.backgroundColor = "hsl(" + randomInt(0, 359) + ", 50%, 50%)";
 }
 
-// check for valid input
+init();
+
+
+// validation of color input
 function isValidHex(color) {
 	return color.match(/^#[a-f0-9]{6}$/i) !== null || color.match(/^\b[a-f0-9]{6}$\b/gi) !== null || 
 		color.match(/^#[a-f0-9]{3}$/i) !== null || color.match(/^\b[a-f0-9]{3}$\b/gi) !== null;
 }
 
 function isValidRgb(color) {
-	var match1 = /rgb\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/;
-	var match2 = /^([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})$/;
-	return match1.exec(color) !== null || match2.exec(color) !== null;
+	var r1 = /rgb\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/;
+	var r2 = /^([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})$/;
+	return r1.exec(color) !== null || r2.exec(color) !== null;
 }
 
 function isValidHsl(color) {
-	var match1 = /hsl\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/;
-	var match2 = /hsl\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)\)/;
-	var match3 = /^([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)$/;
-	return match1.exec(color) !== null || match2.exec(color) !== null || match3.exec(color) !== null;
+	var h1 = /hsl\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})\)/;
+	var h2 = /hsl\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)\)/;
+	var h3 = /^([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%)$/;
+	return h1.exec(color) !== null || h2.exec(color) !== null || h3.exec(color) !== null;
 }
 
 
+// main conversion helpers
 function rgbToHex(v) {
 	v = parseInt(v, 10).toString(16);
     return v.length === 1 ? '0' + v : v;
@@ -60,13 +62,7 @@ function rgbToHsl(rgb) {
 	return [h_f, s_f, l_f];
 }
 
-
-// Handling the conversion:
-// from HEX
-function fromHex(color) {
-
-	if (color.charAt(0) !== '#') color = '#' + color;
-
+function hexToRgb(color, mini) {
 	function hexToR(hex, mini) {
 		if (mini) {
 			var r = hex.substring(1,2);
@@ -88,12 +84,20 @@ function fromHex(color) {
 		} else return parseInt(hex.substring(5,7), 16);
 	}
 
-	function hexToRgb(color, mini) {
-		var r = hexToR(color, mini);
-		var g = hexToG(color, mini);
-		var b = hexToB(color, mini);
-		return [r, g, b];
-	}
+	var r = hexToR(color, mini);
+	var g = hexToG(color, mini);
+	var b = hexToB(color, mini);
+	return [r, g, b];
+}
+
+
+
+// Handling the conversion:
+// from HEX
+function fromHex(color) {
+
+	if (color.charAt(0) !== '#') color = '#' + color;
+
 
 	// setting HEX
 	document.getElementById("result-hex").value = color;
@@ -183,67 +187,64 @@ function fromHsl(color) {
 			s = s / 100;
 			l = l / 100;
 			
-			var t1, t2, tr, tg, tb;
+			var t1, t2;
 			if (l < 0.5) t1 = l * (1 + s);
 			else t1 = l + s - l * s;
 
 			t2 = 2 * l - t1;
-			
-			tr = h + 0.333;
-			tg = h;
-			tb = h - 0.333;
 
-			function checkTemp(v) {
-				if (v < 0) return v + 1;
+			function check1(v) {
+				if 		(v < 0) return v + 1;
 				else if (v > 1) return v - 1;
 				else return v;
 			}
 
-			tr = checkTemp(tr);
-			tg = checkTemp(tg);
-			tb = checkTemp(tb);
-
-			function tempToRgb(temp, t1, t2) {
-				if (6 * temp < 1) return t2 + (t1 - t2) * 6 * temp;
-				else if (2 * temp < 1) return t1;
-				else if (3 * temp < 2) return t2 + (t1 - t2) * (0.666 - temp) * 6;
-				else return t2;
+			function check2(t, t1, t2) {
+				if 		(6 * t < 1) 	return t2 + (t1 - t2) * 6 * t;
+				else if (2 * t < 1) 	return t1;
+				else if (3 * t < 2) 	return t2 + (t1 - t2) * (0.666 - t) * 6;
+				else 					return t2;
 			}
 
-			r = Math.round(tempToRgb(tr, t1, t2) * 255);
-			g = Math.round(tempToRgb(tg, t1, t2) * 255);
-			b = Math.round(tempToRgb(tb, t1, t2) * 255);
+			r = Math.round(check2(check1(h + 0.333), t1, t2) * 255);
+			g = Math.round(check2(check1(h), t1, t2) * 255);
+			b = Math.round(check2(check1(h - 0.333), t1, t2) * 255);
 		}
 
-		var rgb = "rgb(" + r + ", " + g + ", " + b + ")"
-		document.getElementById("result-rgb").value = rgb;
+		document.getElementById("result-rgb").value = "rgb(" + r + ", " + g + ", " + b + ")";
 
 		// setting HEX
 		var hex = '#' + rgbToHex(r).toUpperCase() + rgbToHex(g).toUpperCase() + rgbToHex(b).toUpperCase();
 		document.getElementById("result-hex").value = hex;
 
 		colorSuccess(new_hsl);
-
 	}
 }
 
 
+function convertColor() {
+	var color_input = document.getElementById("color-input").value.replace(/ /g, "");
+	if 		(isValidHex(color_input)) fromHex(color_input);
+	else if (isValidRgb(color_input)) fromRgb(color_input);
+	else if (isValidHsl(color_input)) fromHsl(color_input);
+	else 	colorError();
+}
 
-// success and error
 function colorSuccess(color) {
 	document.body.style.backgroundColor = color;
-	document.getElementById("results-container").style.visibility = "visible";
+	document.getElementById("results-container").classList.remove("hide-results");
 	document.getElementById("color-error").style.display = "none";
 }
 
 function colorError() {
-	document.getElementById("results-container").style.visibility = "hidden";
+	if (document.getElementById("results-container").getAttribute("hide-results") == null) {
+		document.getElementById("results-container").classList.add("hide-results");
+	}
 	document.getElementById("color-error").style.display = "block";
 }
 
 
 
-// listener for Enter key
 document.getElementById("color-input").addEventListener("keyup", function(e) {
     e.preventDefault();
     if (e.keyCode == 13) document.getElementById("color-button").click();
@@ -251,7 +252,7 @@ document.getElementById("color-input").addEventListener("keyup", function(e) {
 
 
 
-// Copy to clipboard feature
+// Copy to clipboard
 var resultParent = document.querySelector("#results-container");
 resultParent.addEventListener("click", copyToClipboard, false);
  
@@ -291,6 +292,9 @@ function copyToClipboard(e) {
     e.stopPropagation();
 }
 
+function showMore() {
+	document.getElementById("error-list").classList.toggle('error-hide');
+}
 
 
 // input autofocus onload
