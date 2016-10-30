@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>Color Converter - HEX, RGB, HSL</title>
+	<meta name="description" content="A very simple color converter for HEX, RGB and HSL formats.">
+	<meta name="keywords" content="color converter, color conversion, color converter webdev, hex, rgb, hsl, hex to rgb, rgb to hex, rgb to hsl, hsl to rgb, hex to hsl, hsl to hex, hexadecimal, hexadecimal to rgb, rgb to hexadecimal, hexadecimal to hsl, hsl to hexadecimal, hex converter, rgb converter, hsl converter, hex to rgb converter, rgb to hex converter, rgb to hsl converter, hsl to rgb converter, hex to hsl converter, hsl to hex converter, hexa converter, hexa to rgb converter, rgb to hexa converter">
+	<meta name="author" content="Vincent Le Put">
+	<meta name="url" content="http://www.vincentleput.com/color-converter/">
+	<meta name="coverage" content="Worldwide">
+	<meta property="og:title" content="Color Converter - HEX, RGB, HSL">
+	<meta property="og:type" content="website">
+	<meta property="og:description" content="An easy to use color converter for HEX, RGB and HSL formats.">
+	<meta property="og:url" content="http://www.vincentleput.com/color-converter/">
+	<meta property="og:image" content="http://www.vincentleput.com/color-converter/img/share.png">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@vleput">
+	<meta name="twitter:creator" content="@vleput">
+	<meta name="twitter:title" content="Color Converter - HEX, RGB, HSL">
+	<meta name="twitter:description" content="An easy to use color converter for HEX, RGB and HSL formats.">
+	<meta name="twitter:image" content="http://www.vincentleput.com/color-converter/img/share-twitter.png">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Color Converter">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="mobile-web-app-capable" content="yes">
+	<link rel="apple-touch-icon" href="img/favicon.png">
+	<link rel="shortcut icon" href="img/favicon.png">
+
+	<link rel="stylesheet" href="styles/main.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-74315068-1', 'auto');
+	  ga('send', 'pageview');
+
+	</script>
+</head>
+<body>
+	<a class="title-link" href="http://vincentleput.com">vlp</a>
+	<div class="container" id="container">
+		<h1 class="title">color converter</h1>
+		<div class="title-separator"></div>
+		<div class="color-container">
+			<input type="text" placeholder="HEX, RGB or HSL" id="color-input" class="color-input color-input-request" title="HEX, RGB or HSL" spellcheck="false">
+			<button type="submit" onclick="convertColor()" class="color-button" id="color-button">go</button>
+		</div>
+
+		<div class="color-error" id="color-error">
+			<a class="show-more" onclick="showMore()">Please enter a valid color <i class="down-icon"></i></a>
+			<ul class="error-list error-hide" id="error-list">
+				<li>HEX: <code>#ffffff</code>, <code>#fff</code>, <code>ffffff</code> or <code>fff</code></li>
+				<li>RGB: <code>rgb(255, 255, 255)</code> or <code>255, 255, 255</code></li>
+				<li>HSL: <code>hsl(359, 0%, 0%)</code>, <code>hsl(359, 0, 0)</code> or <code>359, 0%, 0%</code></li>
+			</ul>
+		</div>
+
+		<div class="results-container hide-results" id="results-container">
+			<div class="results-row">
+				<p class="results-name">hex</p>
+				<div class="results-row__right">
+					<input type="text" class="color-input color-results" id="result-hex" spellcheck="false" readonly>
+					<button class="results-copy-button" title="Copy"><i class="copy-icon" id="result-hex-btn"></i></button>
+				</div>
+			</div>
+			<div class="results-row">
+				<p class="results-name">rgb</p>
+				<div class="results-row__right">
+					<input type="text" class="color-input color-results" id="result-rgb" spellcheck="false" readonly>
+					<button class="results-copy-button" title="Copy"><i class="copy-icon" id="result-rgb-btn"></i></button>
+				</div>
+			</div>
+			<div class="results-row">
+				<p class="results-name">hsl</p>
+				<div class="results-row__right">
+					<input type="text" class="color-input color-results" id="result-hsl" spellcheck="false" readonly>
+					<button class="results-copy-button" title="Copy"><i class="copy-icon" id="result-hsl-btn"></i></button>
+				</div>
+			</div>
+		</div>
+
+		<div class="copied-to-clipboard copied-hidden" id="copied-to-clipboard"><i class="done-icon"></i>Copied to clipboard</div>
+	</div>
+	<div class="contact">
+		<a class="link" href="http://vincentleput.com/#contact" title="Get in touch!">contact</a> &nbsp;&#9679;&nbsp; <a class="link" href="https://twitter.com/vleput" title="Vincent Le Put on Twitter">@vleput</a>
+	</div>
+</body>
+<script type="text/javascript" src="js/logic.js"></script>
+</html>
